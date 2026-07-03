@@ -75,6 +75,7 @@ On screens narrower than 860px, the full desktop sidebar is hidden. In its place
 The CaptionKit embed link shown in the Watch/Playback section is not hardcoded. Enter your own CaptionKit playback URL in the app and click Save; it's stored in the browser's `localStorage` and persists across reloads and future sessions on that device. No redeploy or environment variable change is needed to update it, and each device/browser keeps its own saved link independently.
 
 ## Project Structure
+```
 .
 ├── index.html          The control surface UI, calls /api/signal and /api/status
 ├── login.html          Login page shown to unauthenticated visitors
@@ -84,6 +85,7 @@ The CaptionKit embed link shown in the Watch/Playback section is not hardcoded. 
     ├── signal.js        Proxies POST requests to CaptionKit's /v2/signal endpoint
     ├── status.js        Proxies GET requests to CaptionKit's /v2/me/status endpoint
     └── login.js         Verifies login credentials and issues the signed session cookie
+```
 
 
 ## Security Notes
