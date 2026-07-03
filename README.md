@@ -76,14 +76,15 @@ The CaptionKit embed link shown in the Watch/Playback section is not hardcoded. 
 
 ## Project Structure
 .
-├── index.html           The control surface UI, calls /api/signal and /api/status
-├── login.html           Login page shown to unauthenticated visitors
+├── index.html          The control surface UI, calls /api/signal and /api/status
+├── login.html          Login page shown to unauthenticated visitors
 ├── middleware.js        Edge middleware, guards all routes behind a valid login cookie
 ├── vercel.json          Minimal Vercel configuration
 └── api/
     ├── signal.js        Proxies POST requests to CaptionKit's /v2/signal endpoint
     ├── status.js        Proxies GET requests to CaptionKit's /v2/me/status endpoint
     └── login.js         Verifies login credentials and issues the signed session cookie
+
 
 ## Security Notes
 
