@@ -87,11 +87,20 @@ body{
   position:sticky; top:0; height:100vh; overflow-y:auto;
 }
 @media (max-width:860px){
-  .rail{position:static; height:auto; flex-direction:row; align-items:center; justify-content:space-between; padding:14px 16px; border-right:none; border-bottom:1px solid var(--line); gap:12px;}
-  .rail-groups{display:none;}
-  .rail-status{margin-top:0; padding-top:0; border-top:none; flex-direction:row; align-items:center; gap:10px;}
+  .rail{display:none;}
   .app{padding-bottom:64px;}
-  .main{padding-bottom:100px;}
+  .main{padding-top:16px; padding-bottom:100px;}
+}
+
+/* Slim mobile top strip: wordmark + live badge + theme toggle only, no nav links */
+.mobile-topstrip{display:none;}
+@media (max-width:860px){
+  .mobile-topstrip{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 16px; background:var(--surface-1); border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:40;
+  }
+  .mobile-topstrip .theme-switch{transform:scale(0.9);}
 }
 
 /* Mobile bottom tab bar — thumb-reachable primary nav */
@@ -285,6 +294,19 @@ input[type=password], input[type=text].api-input{
 </head>
 <body>
 <div class="app">
+
+  <div class="mobile-topstrip">
+    <span class="wordmark" style="flex-direction:row; align-items:center; gap:8px;">
+      <span class="name" style="font-size:1.05rem;">Signal Deck</span>
+    </span>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span id="liveBadgeMobile" class="led-badge"><span class="led-dot"></span>Unknown</span>
+      <div class="theme-switch" id="themeToggleMobile">
+        <button id="lightBtnMobile">Light</button>
+        <button id="darkBtnMobile">Dark</button>
+      </div>
+    </div>
+  </div>
 
   <nav class="tabbar" id="mobileTabbar">
     <a href="#sec-controls" class="tabbar-item active" data-target="sec-controls">
@@ -663,6 +685,11 @@ function updateStatusUI(data) {
 
   liveBadge.className = "led-badge " + (isLive ? "is-live" : "is-offline");
   liveBadge.innerHTML = '<span class="led-dot"></span>' + (isLive ? "Live" : "Offline");
+  const liveBadgeMobile = document.getElementById("liveBadgeMobile");
+  if (liveBadgeMobile) {
+    liveBadgeMobile.className = "led-badge " + (isLive ? "is-live" : "is-offline");
+    liveBadgeMobile.innerHTML = '<span class="led-dot"></span>' + (isLive ? "Live" : "Offline");
+  }
 
   document.getElementById("statSessionId").textContent = status.sessionId || "—";
   document.getElementById("statLanguage").textContent = (status.options && status.options.language) || "—";
@@ -733,6 +760,10 @@ function applyTheme(theme) {
   htmlEl.setAttribute("data-theme", theme);
   lightBtn.classList.toggle("active", theme === "light");
   darkBtn.classList.toggle("active", theme === "dark");
+  const lbm = document.getElementById("lightBtnMobile");
+  const dbm = document.getElementById("darkBtnMobile");
+  if (lbm) lbm.classList.toggle("active", theme === "light");
+  if (dbm) dbm.classList.toggle("active", theme === "dark");
   try { localStorage.setItem("signaldeck-theme", theme); } catch(e) {}
 }
 
@@ -745,6 +776,11 @@ applyTheme(savedTheme);
 
 lightBtn.addEventListener("click", () => applyTheme("light"));
 darkBtn.addEventListener("click", () => applyTheme("dark"));
+
+const lightBtnMobile = document.getElementById("lightBtnMobile");
+const darkBtnMobile = document.getElementById("darkBtnMobile");
+if (lightBtnMobile) lightBtnMobile.addEventListener("click", () => applyTheme("light"));
+if (darkBtnMobile) darkBtnMobile.addEventListener("click", () => applyTheme("dark"));
 
 
 
