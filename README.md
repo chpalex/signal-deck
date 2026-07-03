@@ -76,7 +76,7 @@ The CaptionKit embed link shown in the Watch/Playback section is not hardcoded. 
 
 ## Project Structure
 
-```text
+```
 .
 ├── index.html          The control surface UI, calls /api/signal and /api/status
 ├── login.html          Login page shown to unauthenticated visitors
