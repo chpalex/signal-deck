@@ -19,8 +19,8 @@ Signal Deck is a static front end (`index.html`) paired with a small set of Verc
 Browser → /api/signal, /api/status → CaptionKit API
 Browser → middleware.js (checks login cookie) → index.html
 Browser → /api/login → sets signed session cookie
-
 ## Prerequisites
+
 
 - A [CaptionKit](https://captionkit.com) account and API key
 - A [Vercel](https://vercel.com) account (the free tier is sufficient)
@@ -45,8 +45,8 @@ In your Vercel project, go to **Settings → Environment Variables** and add the
 
 To generate a strong `AUTH_SECRET`, run this in a terminal:
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
 All four variables are required. If any are missing, the affected feature (API calls or login) will return a server configuration error instead of working silently.
+
 
 ### 3. Deploy
 
@@ -75,6 +75,7 @@ On screens narrower than 860px, the full desktop sidebar is hidden. In its place
 The CaptionKit embed link shown in the Watch/Playback section is not hardcoded. Enter your own CaptionKit playback URL in the app and click Save; it's stored in the browser's `localStorage` and persists across reloads and future sessions on that device. No redeploy or environment variable change is needed to update it, and each device/browser keeps its own saved link independently.
 
 ## Project Structure
+
 ```
 .
 ├── index.html          The control surface UI, calls /api/signal and /api/status
