@@ -446,10 +446,23 @@ input[type=password], input[type=text].api-input{
 
     <section class="section" id="sec-playback">
       <div class="section-head"><span class="section-num">04</span><h2 class="section-title">Live Caption Playback</h2></div>
-      <p style="margin-top:-8px; margin-bottom:14px;"><a class="embed-link" href="https://captionkit.com/c/jos-port-charlotte" target="_blank" rel="noopener">captionkit.com/c/jos-port-charlotte ↗</a></p>
-      <div class="embed-frame">
-        <iframe src="https://captionkit.com/c/jos-port-charlotte" allow="autoplay; fullscreen" loading="lazy"></iframe>
+
+      <div class="control-row" style="margin-bottom:14px;">
+        <span class="control-label">Playback URL</span>
+        <div class="control-actions" style="flex:1; gap:8px;">
+          <input type="text" id="playbackUrlInput" placeholder="https://captionkit.com/c/your-link"
+            style="flex:1; min-width:180px; padding:10px 12px; border-radius:8px; border:1px solid var(--line); background:var(--surface-1); color:var(--ink); font-size:0.9rem;">
+          <button class="btn" id="savePlaybackBtn">Save</button>
+        </div>
       </div>
+
+      <p style="margin-top:-8px; margin-bottom:14px;" id="playbackLinkWrap">
+        <a class="embed-link" id="playbackLinkText" href="#" target="_blank" rel="noopener"></a>
+      </p>
+      <div class="embed-frame" id="playbackFrameWrap">
+        <iframe id="playbackIframe" src="" allow="autoplay; fullscreen" loading="lazy"></iframe>
+      </div>
+      <p class="footer-note" id="playbackEmptyNote" style="display:none;">No playback URL set yet — enter one above and click Save.</p>
     </section>
 
     <section class="section" id="sec-log">
@@ -473,6 +486,63 @@ input[type=password], input[type=text].api-input{
 // ---- Config ----
 const BASE_URL = "/api/signal";
 const STATUS_URL = "/api/status";
+
+// ---- Playback URL: persisted per-browser via localStorage ----
+const PLAYBACK_STORAGE_KEY = "signaldeck-playback-url";
+const playbackUrlInput = document.getElementById("playbackUrlInput");
+const savePlaybackBtn = document.getElementById("savePlaybackBtn");
+const playbackIframe = document.getElementById("playbackIframe");
+const playbackLinkText = document.getElementById("playbackLinkText");
+const playbackLinkWrap = document.getElementById("playbackLinkWrap");
+const playbackFrameWrap = document.getElementById("playbackFrameWrap");
+const playbackEmptyNote = document.getElementById("playbackEmptyNote");
+
+function isValidPlaybackUrl(url) {
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" || u.protocol === "http:";
+  } catch (e) {
+    return false;
+  }
+}
+
+function renderPlaybackUrl(url) {
+  if (url && isValidPlaybackUrl(url)) {
+    playbackIframe.src = url;
+    playbackLinkText.href = url;
+    playbackLinkText.textContent = url.replace(/^https?:\/\//, "") + " ↗";
+    playbackLinkWrap.style.display = "";
+    playbackFrameWrap.style.display = "";
+    playbackEmptyNote.style.display = "none";
+  } else {
+    playbackIframe.src = "";
+    playbackLinkWrap.style.display = "none";
+    playbackFrameWrap.style.display = "none";
+    playbackEmptyNote.style.display = "";
+  }
+}
+
+function loadPlaybackUrl() {
+  let stored = null;
+  try { stored = localStorage.getItem(PLAYBACK_STORAGE_KEY); } catch (e) {}
+  if (playbackUrlInput) playbackUrlInput.value = stored || "";
+  renderPlaybackUrl(stored);
+}
+
+if (savePlaybackBtn) {
+  savePlaybackBtn.addEventListener("click", () => {
+    const val = (playbackUrlInput.value || "").trim();
+    if (val && !isValidPlaybackUrl(val)) {
+      playbackUrlInput.style.borderColor = "#ff6b6b";
+      return;
+    }
+    playbackUrlInput.style.borderColor = "";
+    try { localStorage.setItem(PLAYBACK_STORAGE_KEY, val); } catch (e) {}
+    renderPlaybackUrl(val);
+  });
+}
+
+loadPlaybackUrl();
 
 // ---- Language options: code -> label ----
 const LANGUAGES = {
