@@ -20,9 +20,6 @@ Browser → /api/signal, /api/status → CaptionKit API
 Browser → middleware.js (checks login cookie) → index.html
 Browser → /api/login → sets signed session cookie
 
-
-text
-
 ## Prerequisites
 
 - A [CaptionKit](https://captionkit.com) account and API key
@@ -48,9 +45,6 @@ In your Vercel project, go to **Settings → Environment Variables** and add the
 
 To generate a strong `AUTH_SECRET`, run this in a terminal:
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
-
-text
 
 All four variables are required. If any are missing, the affected feature (API calls or login) will return a server configuration error instead of working silently.
 
@@ -90,9 +84,6 @@ The CaptionKit embed link shown in the Watch/Playback section is not hardcoded. 
 ├── signal.js # Proxies POST requests to CaptionKit's /v2/signal endpoint
 ├── status.js # Proxies GET requests to CaptionKit's /v2/me/status endpoint
 └── login.js # Verifies login credentials and issues the signed session cookie
-
-
-text
 
 ## Security Notes
 
